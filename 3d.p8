@@ -294,6 +294,7 @@ cube = model:extend{
 
 models = {}
 pov = nil
+fresh = false
 movspd = 0.02
 
 function _init()
@@ -307,21 +308,27 @@ end
 function _update()
 	if btn(⬆️) then
 		pov:tl{0,movspd,0}
+		fresh=false
 	end
 	if btn(⬇️) then
 		pov:tl{0,-movspd,0}
+		fresh=false
 	end
 	if btn(➡️) then
 		pov:tl{movspd,0,0}
+		fresh=false
 	end
 	if btn(⬅️) then
 		pov:tl{-movspd,0,0}
+		fresh=false
 	end
 	if btn(🅾️) then
 		pov:tl{0,0,movspd}
+		fresh=false
 	end
 	if btn(❎) then
 		pov:tl{0,0,-movspd}
+		fresh=false
 	end
 end
 
@@ -330,6 +337,7 @@ function _draw()
 	for m in all(models) do
 		m:draw()
 	end
+	fresh=true
 end
 
 __gfx__
