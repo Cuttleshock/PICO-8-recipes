@@ -32,6 +32,40 @@ function obj:extend(proto)
 	return setmetatable(proto,self)
 end
 
+-->8
+-- vector definition
+
+vec = obj:extend{
+	x=0,
+	y=0,
+	z=0,
+}
+
+-- allow positional initialisn
+-- in addition to named params
+function vec:init(o)
+	self.x = o[1]
+	self.y = o[2]
+	self.z = o[3]
+	self.__super.init(self,o)
+end
+
+function vec:__add(v)
+	return vec{
+	 x=self.x+v.x,
+	 y=self.y+v.y,
+	 z=self.z+v.z,
+	}
+end
+
+function vec:__sub(v)
+	return vec{
+	 x=self.x-v.x,
+	 y=self.y-v.y,
+	 z=self.z-v.z,
+	}
+end
+
 
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
