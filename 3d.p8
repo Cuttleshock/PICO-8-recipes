@@ -35,6 +35,15 @@ end
 -->8
 -- maths helpers and globals
 
+phimin = -1
+phimax = 1
+phiw = phimax-phimin
+pxw = 128
+thetamin = -1
+thetamax = 1
+thetah = thetamax-thetamin
+pxh = 128
+
 pi = 3.1415
 pi2 = pi/2
 pi4 = pi/4
@@ -181,6 +190,26 @@ function vec:theta()
 	local y2=y*y
 	local z=self.z-pov.z
 	return atan(z*invsqrt(x2+y2))
+end
+
+function vec:sx()
+	-- todo check self.y==0 etc
+	-- todo check if behind cam
+	if not self._sx or not fresh then
+		self._sx=(
+		 self:phi()-phimin
+		)*(pxw/phiw)
+	end
+	return self._sx
+end
+
+function vec:sy()
+	if not self._sy or not fresh then
+		self._sy = (
+		 thetamax-self:theta()
+		)*(pxh/thetah)
+	end
+	return self._sy
 end
 
 -->8
