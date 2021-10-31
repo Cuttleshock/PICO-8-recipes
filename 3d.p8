@@ -234,6 +234,25 @@ function model:init(o)
 	end
 end
 
+function model:draw()
+	for f in all(self.fs) do
+		for i=1,#f do
+			v0 = self.vs[f[i]]
+			v1 = self.vs[f[i+1]] or self.vs[f[1]]
+			line(
+			 v0:sx(),
+			 v0:sy(),
+			 v1:sx(),
+			 v1:sy(),
+			 7
+			)
+		end
+	end
+	for v in all(self.vs) do
+		v:draw()
+	end
+end
+
 cube = model:extend{
 	vs={
 		vec{0,0,0},
