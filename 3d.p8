@@ -209,7 +209,9 @@ cube = model:extend{
 -- top-level logic
 
 models = {}
+pov = nil
 function _init()
+	pov = vec{0,0,0}
 	add(models, cube{
 		d={-0.5,1,0.5},
 		s=1,
