@@ -183,6 +183,15 @@ function vec:__sub(v)
 	}
 end
 
+-- translate: add in place
+function vec:tl(v)
+	self.x += v[1]
+	self.y += v[2]
+	self.z += v[3]
+	-- clear cached screen pos
+	self._sx,self._sy=nil,nil
+end
+
 function vec:phi()
   local x=self.x-pov.x
   local y=self.y-pov.y
@@ -250,6 +259,12 @@ function model:draw()
 	end
 	for v in all(self.vs) do
 		v:draw()
+	end
+end
+
+function model:tl(u)
+	for v in all(self.vs) do
+		v:tl(u)
 	end
 end
 
