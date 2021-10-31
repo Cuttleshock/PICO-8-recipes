@@ -66,6 +66,22 @@ function vec:__sub(v)
 	}
 end
 
+-->8
+-- model definition
+
+model = obj:extend{
+--	vs={}, -- vertices
+--	fs={}, -- faces
+}
+
+function model:init(o)
+	for v in all(self.vs) do
+		v.x=(v.x+o.d[1])*o.s
+		v.y=(v.y+o.d[2])*o.s
+		v.z=(v.z+o.d[3])*o.s
+	end
+end
+
 
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
