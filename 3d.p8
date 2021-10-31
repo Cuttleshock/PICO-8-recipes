@@ -294,6 +294,8 @@ cube = model:extend{
 
 models = {}
 pov = nil
+movspd = 0.02
+
 function _init()
 	pov = vec{0,0,0}
 	add(models, cube{
@@ -303,6 +305,24 @@ function _init()
 end
 
 function _update()
+	if btn(⬆️) then
+		pov:tl{0,movspd,0}
+	end
+	if btn(⬇️) then
+		pov:tl{0,-movspd,0}
+	end
+	if btn(➡️) then
+		pov:tl{movspd,0,0}
+	end
+	if btn(⬅️) then
+		pov:tl{-movspd,0,0}
+	end
+	if btn(🅾️) then
+		pov:tl{0,0,movspd}
+	end
+	if btn(❎) then
+		pov:tl{0,0,-movspd}
+	end
 end
 
 function _draw()
