@@ -168,6 +168,21 @@ function vec:__sub(v)
 	}
 end
 
+function vec:phi()
+  local x=self.x-pov.x
+  local y=self.y-pov.y
+	return atan(x/y)
+end
+
+function vec:theta()
+	local x=self.x-pov.x
+	local y=self.y-pov.y
+	local x2=x*x
+	local y2=y*y
+	local z=self.z-pov.z
+	return atan(z*invsqrt(x2+y2))
+end
+
 -->8
 -- model definition
 
