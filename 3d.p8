@@ -127,6 +127,11 @@ function atan(x)
 	end
 end
 
+function invsqrt(x)
+	-- todo: efficient. also x=0?
+	return 1/sqrt(x)
+end
+
 -->8
 -- vector definition
 
