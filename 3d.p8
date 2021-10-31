@@ -103,6 +103,26 @@ cube = model:extend{
 	},
 }
 
+-->8
+-- top-level logic
+
+models = {}
+function _init()
+	add(models, cube{
+		d={-0.5,1,0.5},
+		s=1,
+	})
+end
+
+function _update()
+end
+
+function _draw()
+	cls()
+	for m in all(models) do
+		m:draw()
+	end
+end
 
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
