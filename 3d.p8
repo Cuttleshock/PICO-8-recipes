@@ -161,6 +161,12 @@ function vec:init(o)
 	self.__super.init(self,o)
 end
 
+function vec:draw()
+	local x = self:sx()
+	local y = self:sy()
+	rectfill(x-1,y-1,x+1,y+1,8)
+end
+
 function vec:__add(v)
 	return vec{
 	 x=self.x+v.x,
