@@ -43,6 +43,36 @@ function draw_actors()
 	end
 end
 
+function draw_actors_binary()
+	for a in all(actors) do
+		for t in all(torches) do
+			if a.x>t.x+t.r or a.x+a.base.w<=t.x-t.r or a.y>t.y+t.r or a.y+a.base.h<=t.y-t.r then
+				-- totally outside range, save calculation
+			else
+				local check_x,check_y
+				if a.x>=t.x then
+					check_x=a.x
+				elseif a.x+a.base.w<=t.x then
+					check_x=a.x+a.base.w
+				else
+					check_x=t.x
+				end
+				if a.y>=t.y then
+					check_y=a.y
+				elseif a.y+a.base.h<=t.y then
+					check_y=a.y+a.base.h
+				else
+					check_y=t.y
+				end
+				if (t.x-check_x)*(t.x-check_x)+(t.y-check_y)*(t.y-check_y)<=t.r*t.r then
+					spr(a.base.spr,a.x,a.y)
+					break
+				end
+			end
+		end
+	end
+end
+
 function draw_plain_stripes(torch, col)
 	rectfill(0,0,127,torch.y-torch.r,col)
 	rectfill(0,127,127,torch.y+torch.r,col)
@@ -124,13 +154,13 @@ end
 
 function _draw()
 	map()
-	draw_actors()
+	-- draw_actors()
 
 	-- simplest fill for a single circle:
 	-- draw_plain_stripes(torches[1], shadow_col)
 
 	-- fill one circle with greyscale map:
-	draw_map_stripes(torches[1])
+	-- draw_map_stripes(torches[1])
 
 	-- fill two circles stripily:
 	-- draw_2_alt_stripes(torches[1], torches[2], shadow_col)
@@ -143,7 +173,10 @@ function _draw()
 	-- end
 
 	-- fill two circles with checkerboards
-	-- draw_2_checkerboard(torches[1], torches[2], shadow_col)
+	draw_2_checkerboard(torches[1], torches[2], shadow_col)
+
+	-- draw entire actor if it has any overlap with a light source
+	draw_actors_binary()
 
 	print('\#0cpu '..flr(stat(1)*100)..'%',0,0,7)
 end
