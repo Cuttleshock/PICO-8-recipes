@@ -6,8 +6,17 @@ __lua__
 frame=0
 shadow_col=0
 
-k_sprite_bunny=17
-k_sprite_bat=18
+bunny_base={
+	spr=17,
+	w=6,
+	h=8,
+}
+
+bat_base={
+	spr=18,
+	w=8,
+	h=8,
+}
 
 CHECKERBOARD=0b1010010110100101.1
 
@@ -19,13 +28,13 @@ actors={}
 -->8
 -- drawing routines
 
-function add_actor(spr,x,y)
-	add(actors,{ spr=spr, x=x, y=y })
+function add_actor(base,x,y)
+	add(actors,{ base=base, x=x, y=y })
 end
 
 function draw_actors()
 	for a in all(actors) do
-		spr(a.spr,a.x,a.y)
+		spr(a.base.spr,a.x,a.y)
 	end
 end
 
@@ -83,14 +92,14 @@ end
 -- top-level flow
 
 function _init()
-	add_actor(k_sprite_bunny,16,43)
-	add_actor(k_sprite_bunny,80,27)
-	add_actor(k_sprite_bunny,50,115)
-	add_actor(k_sprite_bunny,60,115)
-	add_actor(k_sprite_bat,40,24)
-	add_actor(k_sprite_bat,104,80)
-	add_actor(k_sprite_bat,64,88)
-	add_actor(k_sprite_bat,100,108)
+	add_actor(bunny_base,16,43)
+	add_actor(bunny_base,80,27)
+	add_actor(bunny_base,50,115)
+	add_actor(bunny_base,60,115)
+	add_actor(bat_base,40,24)
+	add_actor(bat_base,104,80)
+	add_actor(bat_base,64,88)
+	add_actor(bat_base,100,108)
 end
 
 function _update()
