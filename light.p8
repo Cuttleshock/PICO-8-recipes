@@ -4,6 +4,7 @@ __lua__
 -- globals
 
 frame=0
+shadow_col=0
 
 t1={x=40,y=90,r=20}
 t2={x=80,y=40,r=20}
@@ -11,13 +12,13 @@ t2={x=80,y=40,r=20}
 -->8
 -- drawing routines
 
-function draw_stripes(torch)
-	rectfill(0,0,127,torch.y-torch.r,0)
-	rectfill(0,127,127,torch.y+torch.r,0)
+function draw_plain_stripes(torch, col)
+	rectfill(0,0,127,torch.y-torch.r,col)
+	rectfill(0,127,127,torch.y+torch.r,col)
 	for y=torch.y-torch.r+1,torch.y+torch.r-1 do
 		local x=sqrt(torch.r*torch.r-(torch.y-y)*(torch.y-y))
-		line(0,y,torch.x-x,y,0)
-		line(127,y,torch.x+x,y,0)
+		line(0,y,torch.x-x,y,col)
+		line(127,y,torch.x+x,y,col)
 	end
 end
 
@@ -29,21 +30,21 @@ function draw_2_checkerboard(torch_a, torch_b)
 	fillp()
 end
 
-function draw_alt_stripes(torch, startline)
+function draw_alt_stripes(torch, startline, col)
 	for y=startline,127,2 do
 		if y<=torch.y-torch.r or y>=torch.y+torch.r then
-			line(0,y,127,y,0)
+			line(0,y,127,y,col)
 		else
 			local x=sqrt(torch.r*torch.r-(torch.y-y)*(torch.y-y))
-			line(0,y,torch.x-x,y,0)
-			line(127,y,torch.x+x,y,0)
+			line(0,y,torch.x-x,y,col)
+			line(127,y,torch.x+x,y,col)
 		end
 	end
 end
 
-function draw_2_alt_stripes(torch_a, torch_b)
-	draw_alt_stripes(torch_a, 0)
-	draw_alt_stripes(torch_b, 1)
+function draw_2_alt_stripes(torch_a, torch_b, col)
+	draw_alt_stripes(torch_a, 0, col)
+	draw_alt_stripes(torch_b, 1, col)
 end
 
 -->8
@@ -68,20 +69,20 @@ function _draw()
 	cls(13)
 
 	-- simplest fill for a single circle:
-	-- draw_stripes(t1)
+	-- draw_plain_stripes(t1, shadow_col)
 
 	-- fill two circles stripily:
-	-- draw_2_alt_stripes(t1, t2)
+	-- draw_2_alt_stripes(t1, t2, shadow_col)
 
 	-- fill two circles with alternating stripes:
 	-- if frame%20<10 then
-	-- 	draw_2_alt_stripes(t1, t2)
+	-- 	draw_2_alt_stripes(t1, t2, shadow_col)
 	-- else
-	-- 	draw_2_alt_stripes(t2, t1)
+	-- 	draw_2_alt_stripes(t2, t1, shadow_col)
 	-- end
 
 	-- fill two circles with checkerboards
-	draw_2_checkerboard(t1, t2)
+	draw_2_checkerboard(t1, t2, shadow_col)
 
 	print('cpu '..flr(stat(1)*100)..'%',0,0,7)
 end
