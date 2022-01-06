@@ -24,6 +24,21 @@ function draw_plain_stripes(torch, col)
 	end
 end
 
+function draw_map_stripes(torch)
+	-- greyscale - taken from PICO docs
+	pal({1,1,5,5,5,6,7,13,6,7,7,6,13,6,7,1})
+	for y=0,127 do
+		if y<=torch.y-torch.r or y>=torch.y+torch.r then
+			tline(0,y,127,y,0,y)
+		else
+			local x=sqrt(torch.r*torch.r-(torch.y-y)*(torch.y-y))
+			tline(0,y,torch.x-x,y,0,y)
+			tline(torch.x+x,y,127,y,torch.x+x,y)
+		end
+	end
+	pal()
+end
+
 function draw_2_checkerboard(torch_a, torch_b, col)
 	fillp(CHECKERBOARD)
 	draw_plain_stripes(torch_a, col)
@@ -73,6 +88,9 @@ function _draw()
 	-- simplest fill for a single circle:
 	-- draw_plain_stripes(t1, shadow_col)
 
+	-- fill one circle with greyscale map:
+	draw_map_stripes(t1)
+
 	-- fill two circles stripily:
 	-- draw_2_alt_stripes(t1, t2, shadow_col)
 
@@ -84,7 +102,7 @@ function _draw()
 	-- end
 
 	-- fill two circles with checkerboards
-	draw_2_checkerboard(t1, t2, shadow_col)
+	-- draw_2_checkerboard(t1, t2, shadow_col)
 
 	print('cpu '..flr(stat(1)*100)..'%',0,0,7)
 end
