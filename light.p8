@@ -29,11 +29,11 @@ function draw_map_stripes(torch)
 	pal({1,1,5,5,5,6,7,13,6,7,7,6,13,6,7,1})
 	for y=0,127 do
 		if y<=torch.y-torch.r or y>=torch.y+torch.r then
-			tline(0,y,127,y,0,y)
+			tline(0,y,127,y,0,y*0.125)
 		else
 			local x=sqrt(torch.r*torch.r-(torch.y-y)*(torch.y-y))
-			tline(0,y,torch.x-x,y,0,y)
-			tline(torch.x+x,y,127,y,torch.x+x,y)
+			tline(0,y,torch.x-x,y,0,y*0.125)
+			tline(torch.x+x,y,127,y,(torch.x+x)*0.125,y*0.125)
 		end
 	end
 	pal()
