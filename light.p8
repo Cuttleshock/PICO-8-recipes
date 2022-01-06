@@ -24,12 +24,17 @@ t1={x=40,y=90,r=20}
 t2={x=80,y=40,r=20}
 
 actors={}
+torches={}
 
 -->8
 -- drawing routines
 
 function add_actor(base,x,y)
 	add(actors,{ base=base, x=x, y=y })
+end
+
+function add_torch(x,y,r)
+	add(torches, { x=x, y=y, r=r })
 end
 
 function draw_actors()
@@ -100,18 +105,21 @@ function _init()
 	add_actor(bat_base,104,80)
 	add_actor(bat_base,64,88)
 	add_actor(bat_base,100,108)
+
+	add_torch(40,90,20)
+	add_torch(80,40,20)
 end
 
 function _update()
 	frame+=1
-	if (btn(⬇️)) t1.y+=1
-	if (btn(⬆️)) t1.y-=1
-	if (btn(⬅️)) t1.x-=1
-	if (btn(➡️)) t1.x+=1
+	if (btn(⬇️)) torches[1].y+=1
+	if (btn(⬆️)) torches[1].y-=1
+	if (btn(⬅️)) torches[1].x-=1
+	if (btn(➡️)) torches[1].x+=1
 	if btn(❎) then
-		t1.r=max(t1.r-1,0)
+		torches[1].r=max(torches[1].r-1,0)
 	end
-	if (btn(🅾️)) t1.r+=1
+	if (btn(🅾️)) torches[1].r+=1
 end
 
 function _draw()
@@ -119,23 +127,23 @@ function _draw()
 	draw_actors()
 
 	-- simplest fill for a single circle:
-	-- draw_plain_stripes(t1, shadow_col)
+	-- draw_plain_stripes(torches[1], shadow_col)
 
 	-- fill one circle with greyscale map:
-	draw_map_stripes(t1)
+	draw_map_stripes(torches[1])
 
 	-- fill two circles stripily:
-	-- draw_2_alt_stripes(t1, t2, shadow_col)
+	-- draw_2_alt_stripes(torches[1], torches[2], shadow_col)
 
 	-- fill two circles with alternating stripes:
 	-- if frame%20<10 then
-	-- 	draw_2_alt_stripes(t1, t2, shadow_col)
+	-- 	draw_2_alt_stripes(torches[1], torches[2], shadow_col)
 	-- else
-	-- 	draw_2_alt_stripes(t2, t1, shadow_col)
+	-- 	draw_2_alt_stripes(torches[2], torches[1], shadow_col)
 	-- end
 
 	-- fill two circles with checkerboards
-	-- draw_2_checkerboard(t1, t2, shadow_col)
+	-- draw_2_checkerboard(torches[1], torches[2], shadow_col)
 
 	print('\#0cpu '..flr(stat(1)*100)..'%',0,0,7)
 end
