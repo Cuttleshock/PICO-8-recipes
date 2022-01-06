@@ -6,6 +6,8 @@ __lua__
 frame=0
 shadow_col=0
 
+CHECKERBOARD=0b1010010110100101.1
+
 t1={x=40,y=90,r=20}
 t2={x=80,y=40,r=20}
 
@@ -22,11 +24,11 @@ function draw_plain_stripes(torch, col)
 	end
 end
 
-function draw_2_checkerboard(torch_a, torch_b)
-	fillp()
-	draw_stripes(torch_a)
-	fillp()
-	draw_stripes(torch_b)
+function draw_2_checkerboard(torch_a, torch_b, col)
+	fillp(CHECKERBOARD)
+	draw_plain_stripes(torch_a, col)
+	fillp(~CHECKERBOARD&0xffff|0b0.1)
+	draw_plain_stripes(torch_b, col)
 	fillp()
 end
 
