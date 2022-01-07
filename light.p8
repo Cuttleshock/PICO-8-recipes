@@ -23,6 +23,30 @@ CHECKERBOARD=0b1010010110100101
 actors={}
 torches={}
 
+interactable=nil
+
+-->8
+-- non-drawing functions
+
+-- ignores overlap between torches
+function take_torch(dest, src)
+	dest.bitfield=dest.bitfield|src.bitfield
+	src.bitfield=0
+end
+
+-- ignores overlap between torches
+function share_torch(src, dest)
+	local tmp=src.bitfield
+	dest.bitfield=tmp&(~CHECKERBOARD|0xffff)
+	src.bitfield=tmp&CHECKERBOARD
+end
+
+function find_interactable_torch(player)
+	for t in all(torches) do
+		if (t!=player and abs(t.x-player.x)<=8 and abs(t.y-player.y)<=8) return t
+	end
+end
+
 -->8
 -- drawing routines
 
@@ -150,14 +174,23 @@ end
 
 function _update()
 	frame+=1
+
+	if interactable then
+		if btnp(❎) then
+			if interactable.bitfield!=0 then
+				take_torch(interactable,torches[1])
+			else
+				share_torch(torches[1],interactable)
+			end
+		end
+	end
+
 	if (btn(⬇️)) torches[1].y+=1
 	if (btn(⬆️)) torches[1].y-=1
 	if (btn(⬅️)) torches[1].x-=1
 	if (btn(➡️)) torches[1].x+=1
-	if btn(❎) then
-		torches[1].r=max(torches[1].r-1,0)
-	end
-	if (btn(🅾️)) torches[1].r+=1
+
+	interactable=find_interactable_torch(torches[1])
 end
 
 function _draw()
@@ -186,6 +219,9 @@ function _draw()
 	-- draw entire actor if it has any overlap with a light source
 	draw_actors_discrete()
 	draw_torches()
+	if interactable then
+		print('\#0press ❎',interactable.x-14,interactable.y-10,7)
+	end
 
 	print('\#0cpu '..flr(stat(1)*100)..'%',0,0,7)
 end
