@@ -19,6 +19,8 @@ bat_base={
 }
 
 CHECKERBOARD=0b1010010110100101
+ANTI_CHECKERBOARD=(~CHECKERBOARD)&0xffff
+TORCH_OFF=0xffff
 
 actors={}
 torches={}
@@ -30,15 +32,15 @@ interactable=nil
 
 -- ignores overlap between torches
 function take_torch(dest, src)
-	dest.bitfield=dest.bitfield|src.bitfield
-	src.bitfield=0
+	dest.bitfield=dest.bitfield&src.bitfield
+	src.bitfield=TORCH_OFF
 end
 
 -- ignores overlap between torches
 function share_torch(src, dest)
 	local tmp=src.bitfield
-	dest.bitfield=tmp&(~CHECKERBOARD|0xffff)
-	src.bitfield=tmp&CHECKERBOARD
+	dest.bitfield=tmp|CHECKERBOARD
+	src.bitfield=tmp|ANTI_CHECKERBOARD
 end
 
 function find_interactable_torch(player)
@@ -96,14 +98,13 @@ end
 
 function draw_torches()
 	for t in all(torches) do
-		if t.bitfield==0 then
+		if t.bitfield==TORCH_OFF then
 			spr(33,t.x-4,t.y-4)
 		else
 			spr(34,t.x-4,t.y-4)
 		end
 	end
 end
-
 
 function draw_plain_stripes(torch, col)
 	rectfill(0,0,127,torch.y-torch.r,col)
@@ -168,8 +169,8 @@ function _init()
 	add_actor(bat_base,64,88)
 	add_actor(bat_base,100,108)
 
-	add_torch(40,90,20,CHECKERBOARD)
-	add_torch(80,40,20,~CHECKERBOARD&0xffff)
+	add_torch(40,90,20,0b1111000011110000)
+	add_torch(80,40,20,0b0000111100001111)
 end
 
 function _update()
@@ -177,8 +178,8 @@ function _update()
 
 	if interactable then
 		if btnp(❎) then
-			if interactable.bitfield!=0 then
-				take_torch(interactable,torches[1])
+			if interactable.bitfield!=TORCH_OFF then
+				take_torch(torches[1],interactable)
 			else
 				share_torch(torches[1],interactable)
 			end
