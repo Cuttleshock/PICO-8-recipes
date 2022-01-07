@@ -38,9 +38,16 @@ end
 
 -- ignores overlap between torches
 function share_torch(src, dest)
-	local tmp=src.bitfield
-	dest.bitfield=tmp|CHECKERBOARD
-	src.bitfield=tmp|ANTI_CHECKERBOARD
+	local mine=true
+	local destmask=TORCH_OFF
+	for i=0,15 do
+		if (~src.bitfield)&(1<<i)!=0 then
+			if (not mine) destmask=destmask&~(1<<i)
+			mine=not mine
+		end
+	end
+	dest.bitfield=dest.bitfield&destmask
+	src.bitfield=(src.bitfield^^(~destmask))&TORCH_OFF
 end
 
 function find_interactable_torch(player)
