@@ -69,7 +69,7 @@ end
 function draw_actors_discrete()
 	for a in all(actors) do
 		for t in all(torches) do
-			if a.x>t.x+t.r or a.x+a.base.w<=t.x-t.r or a.y>t.y+t.r or a.y+a.base.h<=t.y-t.r then
+			if t.bitfield==TORCH_OFF or a.x>t.x+t.r or a.x+a.base.w<=t.x-t.r or a.y>t.y+t.r or a.y+a.base.h<=t.y-t.r then
 				-- totally outside range, save calculation
 			else
 				local check_x,check_y
