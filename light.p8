@@ -169,8 +169,10 @@ function _init()
 	add_actor(bat_base,64,88)
 	add_actor(bat_base,100,108)
 
-	add_torch(40,90,20,0b1111000011110000)
-	add_torch(80,40,20,0b0000111100001111)
+	add_torch(40,90,20,0b1111001111110011)
+	add_torch(80,40,20,0b0011111100111111)
+	add_torch(30,30,15,0b1110111011101110)
+	add_torch(75,85,25,0b1101110111011101)
 end
 
 function _update()
