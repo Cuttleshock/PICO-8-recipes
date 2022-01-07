@@ -30,6 +30,16 @@ interactable=nil
 -->8
 -- non-drawing functions
 
+-- deterministic and reversible if we want
+function permute_16b(bf)
+	local ret=0
+	for i=0,15 do
+		local bit=(bf>>i)&1
+		ret=ret|bit<<(7*i%16)
+	end
+	return ret
+end
+
 -- ignores overlap between torches
 function take_torch(dest, src)
 	dest.bitfield=dest.bitfield&src.bitfield
