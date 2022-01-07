@@ -40,6 +40,15 @@ function permute_16b(bf)
 	return ret
 end
 
+-- i hear there's a more efficient way of doing this
+function count_16b(bf)
+	local ret=0
+	for i=0,15 do
+		if ((1<<i)&bf!=0) ret+=1
+	end
+	return ret
+end
+
 -- ignores overlap between torches
 function take_torch(dest, src)
 	dest.bitfield=dest.bitfield&src.bitfield
@@ -48,13 +57,20 @@ end
 
 -- ignores overlap between torches
 function share_torch(src, dest)
-	local mine=true
 	local destmask=TORCH_OFF
+	local bits_shared=0
+	local bits_unshared=0
+	local bits_total=count_16b(~src.bitfield)
 	for i=0,15 do
 		if (~src.bitfield)&(1<<i)!=0 then
-			if (not mine) destmask=destmask&~(1<<i)
-			mine=not mine
+			if bits_unshared>=bits_total/2 or rnd(1)<0.5 then
+				destmask=destmask&~(1<<i)
+				bits_shared+=1
+			else
+				bits_unshared+=1
+			end
 		end
+		if (bits_shared>=bits_total/2) break
 	end
 	dest.bitfield=dest.bitfield&destmask
 	src.bitfield=(src.bitfield^^(~destmask))&TORCH_OFF
