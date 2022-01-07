@@ -20,9 +20,6 @@ bat_base={
 
 CHECKERBOARD=0b1010010110100101.1
 
-t1={x=40,y=90,r=20}
-t2={x=80,y=40,r=20}
-
 actors={}
 torches={}
 
@@ -33,8 +30,8 @@ function add_actor(base,x,y)
 	add(actors,{ base=base, x=x, y=y })
 end
 
-function add_torch(x,y,r)
-	add(torches, { x=x, y=y, r=r })
+function add_torch(x,y,r,bitfield)
+	add(torches, { x=x, y=y, r=r, bitfield=bitfield })
 end
 
 function draw_actors()
@@ -43,7 +40,7 @@ function draw_actors()
 	end
 end
 
-function draw_actors_binary()
+function draw_actors_discrete()
 	for a in all(actors) do
 		for t in all(torches) do
 			if a.x>t.x+t.r or a.x+a.base.w<=t.x-t.r or a.y>t.y+t.r or a.y+a.base.h<=t.y-t.r then
@@ -98,11 +95,11 @@ function draw_map_stripes(torch)
 	pal()
 end
 
-function draw_2_checkerboard(torch_a, torch_b, col)
-	fillp(CHECKERBOARD)
-	draw_plain_stripes(torch_a, col)
-	fillp(~CHECKERBOARD&0xffff|0b0.1)
-	draw_plain_stripes(torch_b, col)
+function draw_shared_checkerboard(col)
+	for t in all(torches) do
+		fillp(t.bitfield|0b0.1)
+		draw_plain_stripes(t, col)
+	end
 	fillp()
 end
 
@@ -136,8 +133,8 @@ function _init()
 	add_actor(bat_base,64,88)
 	add_actor(bat_base,100,108)
 
-	add_torch(40,90,20)
-	add_torch(80,40,20)
+	add_torch(40,90,20,CHECKERBOARD)
+	add_torch(80,40,20,~CHECKERBOARD&0xffff)
 end
 
 function _update()
@@ -173,10 +170,10 @@ function _draw()
 	-- end
 
 	-- fill two circles with checkerboards
-	draw_2_checkerboard(torches[1], torches[2], shadow_col)
+	draw_shared_checkerboard(shadow_col)
 
 	-- draw entire actor if it has any overlap with a light source
-	draw_actors_binary()
+	draw_actors_discrete()
 
 	print('\#0cpu '..flr(stat(1)*100)..'%',0,0,7)
 end
