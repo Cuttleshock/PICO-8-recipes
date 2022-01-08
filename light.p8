@@ -41,6 +41,14 @@ function permute_16b(bf,n)
 	return ret
 end
 
+-- swap two bits selected by index
+function swap_16b(bf,a,b)
+	local bit_a=(bf>>a)&1
+	local bit_b=(bf>>b)&1
+	if (bit_a!=bit_b) bf=bf^^(1<<a|1<<b)
+	return bf
+end
+
 -- i hear there's a more efficient way of doing this
 function count_16b(bf)
 	local ret=0
@@ -219,8 +227,9 @@ function _update()
 
 	if frame%15==0 then
 		local seed=rnd(coprime_16)
+		local a,b=flr(rnd(15)),flr(rnd(15))
 		for t in all(torches) do
-			t.bitfield=permute_16b(t.bitfield,seed)
+			t.bitfield=swap_16b(t.bitfield,a,b)
 		end
 	end
 
