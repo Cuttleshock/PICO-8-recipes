@@ -185,6 +185,31 @@ function draw_shared_checkerboard(col)
 	fillp()
 end
 
+function draw_plain_stripes_partial(torch,col,n)
+	local in_circle=false
+	for y=4*n,4*n+3 do
+		if y<=torch.y-torch.r or y>=torch.y+torch.r then
+			line(0,y,127,y,col)
+		else
+			local x=sqrt(torch.r*torch.r-(torch.y-y)*(torch.y-y))
+			line(0,y,torch.x-x,y,col)
+			line(127,y,torch.x+x,y,col)
+		end
+	end
+end
+
+-- with a fixed seed, change fillp every 4 lines
+function draw_shuffled_checkerboard(col)
+	for n=0,31 do
+		local seed=rnd(coprime_16)
+		for t in all(torches) do
+			fillp(permute_16b(t.bitfield,seed)|0b0.1)
+			draw_plain_stripes_partial(t,col,n)
+		end
+	end
+	fillp()
+end
+
 function draw_alt_stripes(torch, startline, col)
 	for y=startline,127,2 do
 		if y<=torch.y-torch.r or y>=torch.y+torch.r then
@@ -253,7 +278,7 @@ end
 
 function _draw()
 	map()
-	draw_shared_checkerboard(shadow_col)
+	draw_shuffled_checkerboard(shadow_col)
 	draw_actors_discrete()
 	draw_torches()
 	if interactable then
