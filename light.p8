@@ -21,6 +21,7 @@ bat_base={
 CHECKERBOARD=0b1010010110100101
 ANTI_CHECKERBOARD=(~CHECKERBOARD)&0xffff
 TORCH_OFF=0xffff
+coprime_16={3,5,7,9,11,13,15} -- don't include 1
 
 actors={}
 torches={}
@@ -31,11 +32,11 @@ interactable=nil
 -- non-drawing functions
 
 -- deterministic and reversible if we want
-function permute_16b(bf)
+function permute_16b(bf,n)
 	local ret=0
 	for i=0,15 do
 		local bit=(bf>>i)&1
-		ret=ret|bit<<(7*i%16)
+		ret=ret|bit<<(n*i%16)
 	end
 	return ret
 end
@@ -99,6 +100,7 @@ function draw_actors()
 	end
 end
 
+-- draw entire actor if it has any overlap with a light source
 function draw_actors_discrete()
 	for a in all(actors) do
 		for t in all(torches) do
@@ -139,6 +141,7 @@ function draw_torches()
 	end
 end
 
+-- simplest fill for a single circle
 function draw_plain_stripes(torch, col)
 	rectfill(0,0,127,torch.y-torch.r,col)
 	rectfill(0,127,127,torch.y+torch.r,col)
@@ -149,6 +152,7 @@ function draw_plain_stripes(torch, col)
 	end
 end
 
+-- fill one circle with greyscale map
 function draw_map_stripes(torch)
 	-- greyscale - taken from PICO docs
 	pal({1,1,5,5,5,6,7,13,6,7,7,6,13,6,7,1})
@@ -164,6 +168,7 @@ function draw_map_stripes(torch)
 	pal()
 end
 
+-- fill two circles with checkerboards
 function draw_shared_checkerboard(col)
 	for t in all(torches) do
 		fillp(t.bitfield|0b0.1)
@@ -184,6 +189,7 @@ function draw_alt_stripes(torch, startline, col)
 	end
 end
 
+-- fill two circles stripily
 function draw_2_alt_stripes(torch_a, torch_b, col)
 	draw_alt_stripes(torch_a, 0, col)
 	draw_alt_stripes(torch_b, 1, col)
@@ -211,6 +217,13 @@ end
 function _update()
 	frame+=1
 
+	if frame%15==0 then
+		local seed=rnd(coprime_16)
+		for t in all(torches) do
+			t.bitfield=permute_16b(t.bitfield,seed)
+		end
+	end
+
 	if interactable then
 		if btnp(❎) then
 			if interactable.bitfield!=TORCH_OFF then
@@ -231,28 +244,7 @@ end
 
 function _draw()
 	map()
-	-- draw_actors()
-
-	-- simplest fill for a single circle:
-	-- draw_plain_stripes(torches[1], shadow_col)
-
-	-- fill one circle with greyscale map:
-	-- draw_map_stripes(torches[1])
-
-	-- fill two circles stripily:
-	-- draw_2_alt_stripes(torches[1], torches[2], shadow_col)
-
-	-- fill two circles with alternating stripes:
-	-- if frame%20<10 then
-	-- 	draw_2_alt_stripes(torches[1], torches[2], shadow_col)
-	-- else
-	-- 	draw_2_alt_stripes(torches[2], torches[1], shadow_col)
-	-- end
-
-	-- fill two circles with checkerboards
 	draw_shared_checkerboard(shadow_col)
-
-	-- draw entire actor if it has any overlap with a light source
 	draw_actors_discrete()
 	draw_torches()
 	if interactable then
