@@ -338,6 +338,7 @@ function _draw()
 		m:draw()
 	end
 	fresh=true
+	print('\#0cpu '..flr(stat(1)*100)..'% mem '..flr(stat(0)*100/2048)..'%',0,0,7)
 end
 
 __gfx__
