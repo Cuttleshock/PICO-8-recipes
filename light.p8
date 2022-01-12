@@ -245,6 +245,10 @@ function _init()
 	add_torch(80,40,20,0b0011111100111111)
 	add_torch(30,30,15,0b1110111011101110)
 	add_torch(75,85,25,0b1101110111011101)
+	add_torch(60,64,128,TORCH_OFF)
+	add_torch(5,40,0,TORCH_OFF)
+	add_torch(5,55,0,TORCH_OFF)
+	add_torch(5,70,0,TORCH_OFF)
 end
 
 function _update()
@@ -278,7 +282,7 @@ end
 
 function _draw()
 	map()
-	draw_shuffled_checkerboard(shadow_col)
+	draw_shared_checkerboard(shadow_col)
 	draw_actors_discrete()
 	draw_torches()
 	if interactable then
