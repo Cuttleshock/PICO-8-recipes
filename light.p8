@@ -203,8 +203,10 @@ function draw_shuffled_checkerboard(col)
 	for n=0,31 do
 		local seed=rnd(coprime_16)
 		for t in all(torches) do
-			fillp(permute_16b(t.bitfield,seed)|0b0.1)
-			draw_plain_stripes_partial(t,col,n)
+			if t.bitfield!=TORCH_OFF then
+				fillp(permute_16b(t.bitfield,seed)|0b0.1)
+				draw_plain_stripes_partial(t,col,n)
+			end
 		end
 	end
 	fillp()
