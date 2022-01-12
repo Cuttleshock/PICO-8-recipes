@@ -254,7 +254,7 @@ end
 function _update()
 	frame+=1
 
-	if frame%15==0 then
+	if frame%20==0 then
 		local seed=rnd(coprime_16)
 		local a,b=flr(rnd(15)),flr(rnd(15))
 		for t in all(torches) do
@@ -282,7 +282,8 @@ end
 
 function _draw()
 	map()
-	draw_shared_checkerboard(shadow_col)
+	srand(frame\20)
+	draw_shuffled_checkerboard(shadow_col)
 	draw_actors_discrete()
 	draw_torches()
 	if interactable then
