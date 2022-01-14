@@ -168,12 +168,12 @@ end
 -->8
 -- model definition
 
-function init_model(fs,vs,disp,scale)
+function init_model(fs,vs,disp,scale,phi)
 	local m={fs=fs,vs={}}
 	for v in all(vs) do
 		add(m.vs,{
-			(v[1]+disp[1])*scale,
-			(v[2]+disp[2])*scale,
+			((v[1]*cos(phi)+v[2]*sin(phi))+disp[1])*scale,
+			((v[2]*cos(phi)-v[1]*sin(phi))+disp[2])*scale,
 			(v[3]+disp[3])*scale,
 		})
 	end
@@ -211,8 +211,8 @@ cube_fs = {
 	{3,4,8,7},
 	{5,6,7,8},
 }
-function make_cube(disp,scale)
-	add(models,init_model(cube_fs,cube_vs,disp,scale))
+function make_cube(disp,scale,phi)
+	add(models,init_model(cube_fs,cube_vs,disp,scale,phi))
 end
 
 -->8
@@ -221,8 +221,8 @@ end
 function _init()
 	pov={0,0,0,phi=0}
 	models={}
-	make_cube({-0.5,1,0.5},1)
-	make_cube({0,2,-0.5},0.5)
+	make_cube({-0.5,1,0.5},1,0.2)
+	make_cube({0,2,-0.5},0.5,0)
 end
 
 function _update()
