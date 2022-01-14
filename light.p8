@@ -58,6 +58,11 @@ function count_16b(bf)
 	return ret
 end
 
+function rotl_16b(bf, n)
+	n=n%16
+	return (bf<<n)|(bf>>>(16-n))&TORCH_OFF
+end
+
 -- ignores overlap between torches
 function take_torch(dest, src)
 	dest.bitfield=dest.bitfield&src.bitfield
