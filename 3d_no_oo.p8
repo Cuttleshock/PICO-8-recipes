@@ -10,11 +10,21 @@ thetah = 1
 thetamax = thetah/2
 thetamin = -thetamax
 
-movspd = 0.02
+movspd = 0.05
+turnspd = 0.1
 
 pi = 3.1415
 pi2 = pi/2
-pi4 = pi/4
+inv2pi = 1/(pi*2)
+
+_sin_builtin=sin
+function sin(x)
+	return -_sin_builtin(x*inv2pi)
+end
+_cos_builtin=cos
+function cos(x)
+	return _cos_builtin(x*inv2pi)
+end
 
 -- atan lookup table
 _atlen = 64
@@ -125,12 +135,16 @@ function tl_vec(v1,v2)
 end
 
 function get_phi(v)
-	return atan((v[1]-pov[1])/(v[2]-pov[2]))
+	-- we should serialise cos,sin(pov.phi)
+	local x=(v[1]-pov[1])*cos(pov.phi)-(v[2]-pov[2])*sin(pov.phi)
+	return atan(x/(v[2]-pov[2]))
 end
 
 function get_theta(v)
-	local x,y=v[1]-pov[1],v[2]-pov[2]
-	return atan((v[3]-pov[3])*invsqrt(x*x+y*y))
+	local x=(v[1]-pov[1])*cos(pov.phi)-(v[2]-pov[2])*sin(pov.phi)
+	local y=(v[2]-pov[2])*cos(pov.phi)+(v[1]-pov[1])*sin(pov.phi)
+	local z=v[3]-pov[3]
+	return atan(z*invsqrt(x*x+y*y))
 end
 
 function get_sx(v)
@@ -203,7 +217,7 @@ end
 -- top-level logic
 
 function _init()
-	pov={0,0,0}
+	pov={0,0,0,phi=0}
 	models={}
 	make_cube({-0.5,1,0.5},1)
 	make_cube({0,2,-0.5},0.5)
@@ -212,27 +226,31 @@ end
 function _update()
 	fresh=true
 	if btn(⬆️) then
-		pov[2]+=movspd
+		pov[2]+=movspd*cos(pov.phi)
+		pov[1]+=movspd*sin(pov.phi)
 		fresh=false
 	end
 	if btn(⬇️) then
-		pov[2]-=movspd
+		pov[2]-=movspd*cos(pov.phi)
+		pov[1]-=movspd*sin(pov.phi)
 		fresh=false
 	end
 	if btn(➡️) then
-		pov[1]+=movspd
+		if btn(❎) then -- strafe
+			pov[1]+=movspd*cos(pov.phi)
+			pov[2]-=movspd*sin(pov.phi)
+		else -- turn
+			pov.phi+=turnspd
+		end
 		fresh=false
 	end
 	if btn(⬅️) then
-		pov[1]-=movspd
-		fresh=false
-	end
-	if btn(🅾️) then
-		pov[3]+=movspd
-		fresh=false
-	end
-	if btn(❎) then
-		pov[3]-=movspd
+		if btn(❎) then -- strafe
+			pov[1]-=movspd*cos(pov.phi)
+			pov[2]+=movspd*sin(pov.phi)
+		else -- turn
+			pov.phi-=turnspd
+		end
 		fresh=false
 	end
 end
