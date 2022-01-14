@@ -168,8 +168,8 @@ end
 -->8
 -- model definition
 
-function init_model(fs,vs,disp,scale,phi)
-	local m={fs=fs,vs={}}
+function init_model(fs,vs,disp,scale,phi,col)
+	local m={fs=fs,vs={},col=col}
 	for v in all(vs) do
 		add(m.vs,{
 			((v[1]*cos(phi)+v[2]*sin(phi))+disp[1])*scale,
@@ -185,7 +185,7 @@ function draw_model(m)
 		for i=1,#f do
 			local v0=m.vs[f[i]]
 			local v1=m.vs[f[i+1]] or m.vs[f[1]]
-			line(get_sx(v0),get_sy(v0),get_sx(v1),get_sy(v1),7) -- white
+			line(get_sx(v0),get_sy(v0),get_sx(v1),get_sy(v1),m.col)
 		end
 	end
 	for v in all(m.vs) do
@@ -211,8 +211,8 @@ cube_fs = {
 	{3,4,8,7},
 	{5,6,7,8},
 }
-function make_cube(disp,scale,phi)
-	add(models,init_model(cube_fs,cube_vs,disp,scale,phi))
+function make_cube(disp,scale,phi,col)
+	add(models,init_model(cube_fs,cube_vs,disp,scale,phi,col))
 end
 
 octa_vs = {
@@ -233,8 +233,8 @@ octa_fs = {
 	{6,4,5},
 	{6,5,2},
 }
-function make_octa(disp,scale,phi)
-	add(models,init_model(octa_fs,octa_vs,disp,scale,phi))
+function make_octa(disp,scale,phi,col)
+	add(models,init_model(octa_fs,octa_vs,disp,scale,phi,col))
 end
 
 -->8
@@ -243,9 +243,9 @@ end
 function _init()
 	pov={0,0,0,phi=0}
 	models={}
-	make_cube({-0.5,1,0.5},1,0.2)
-	make_cube({0,2,-0.5},0.5,0)
-	make_octa({-1,2,0},0.5,0)
+	make_cube({-0.5,1,0.5},1,0.2,7)
+	make_cube({0,2,-0.5},0.5,0,11)
+	make_octa({-1,2,0},0.5,0,12)
 end
 
 function _update()
