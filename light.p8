@@ -294,7 +294,11 @@ function _draw()
 	draw_actors_discrete()
 	draw_torches()
 	if interactable then
-		print('\#0press ❎',interactable.x-14,interactable.y-10,7)
+		if interactable.bitfield!=TORCH_OFF then
+			print('\#0❎ take',interactable.x-14,interactable.y-10,7)
+		else
+			print('\#0❎ share',interactable.x-14,interactable.y-10,7)
+		end
 	end
 
 	print('\#0cpu '..flr(stat(1)*100)..'%',0,0,7)
