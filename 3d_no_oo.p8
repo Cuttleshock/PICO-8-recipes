@@ -215,6 +215,28 @@ function make_cube(disp,scale,phi)
 	add(models,init_model(cube_fs,cube_vs,disp,scale,phi))
 end
 
+octa_vs = {
+	{0,0,0},
+	{1,0,1},
+	{0,1,1},
+	{-1,0,1},
+	{0,-1,1},
+	{0,0,2},
+}
+octa_fs = {
+	{1,2,3},
+	{1,3,4},
+	{1,4,5},
+	{1,5,2},
+	{6,2,3},
+	{6,3,4},
+	{6,4,5},
+	{6,5,2},
+}
+function make_octa(disp,scale,phi)
+	add(models,init_model(octa_fs,octa_vs,disp,scale,phi))
+end
+
 -->8
 -- top-level logic
 
@@ -223,6 +245,7 @@ function _init()
 	models={}
 	make_cube({-0.5,1,0.5},1,0.2)
 	make_cube({0,2,-0.5},0.5,0)
+	make_octa({-1,2,0},0.5,0)
 end
 
 function _update()
