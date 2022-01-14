@@ -26,6 +26,7 @@ function cos(x)
 	return _cos_builtin(x*inv2pi)
 end
 
+-- todo: can we replace all this with built-in atan2?
 -- atan lookup table
 _atlen = 64
 _atres = 1/_atlen
@@ -227,13 +228,21 @@ end
 function _update()
 	fresh=true
 	if btn(⬆️) then
-		pov[2]+=movspd*cos(pov.phi)
-		pov[1]+=movspd*sin(pov.phi)
+		if btn(❎) then
+			pov[3]+=movspd
+		else
+			pov[2]+=movspd*cos(pov.phi)
+			pov[1]+=movspd*sin(pov.phi)
+		end
 		fresh=false
 	end
 	if btn(⬇️) then
-		pov[2]-=movspd*cos(pov.phi)
-		pov[1]-=movspd*sin(pov.phi)
+		if btn(❎) then
+			pov[3]-=movspd
+		else
+			pov[2]-=movspd*cos(pov.phi)
+			pov[1]-=movspd*sin(pov.phi)
+		end
 		fresh=false
 	end
 	if btn(➡️) then
