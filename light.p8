@@ -296,7 +296,7 @@ function _draw()
 	if interactable then
 		if interactable.bitfield!=TORCH_OFF then
 			print('\#0❎ take',interactable.x-14,interactable.y-10,7)
-		else
+		elseif torches[1].bitfield!=TORCH_OFF then
 			print('\#0❎ share',interactable.x-14,interactable.y-10,7)
 		end
 	end
