@@ -3,6 +3,7 @@ version 32
 __lua__
 -- maths helpers and globals
 
+eps = 0x0.0001
 phiw = 1
 phimax = phiw/2
 phimin = -phimax
@@ -124,7 +125,7 @@ end
 -- vector definition
 
 function draw_vec(vec)
-	local x,y=get_sx(vec),get_sy(vec)
+	local x,y=get_sx(vec,true),get_sy(vec,true)
 	rectfill(x-1,y-1,x+1,y+1,8) -- red
 end
 
@@ -149,7 +150,7 @@ function get_theta(v)
 	return atan(z*invsqrt(x*x+y*y))
 end
 
-function get_sx(v)
+function get_sx(v, fresh)
 	-- todo check self.y==0 etc
 	-- todo check if behind cam
 	if not v._sx or not fresh then
@@ -158,7 +159,7 @@ function get_sx(v)
 	return v._sx
 end
 
-function get_sy(v)
+function get_sy(v, fresh)
 	if not v._sy or not fresh then
 		v._sy=(thetamax-get_theta(v))*128/thetah
 	end
@@ -181,13 +182,15 @@ function init_model(fs,vs,disp,scale,phi,col)
 end
 
 function draw_model(m)
+	local m_fresh = fresh and m.fresh
 	for f in all(m.fs) do
 		for i=1,#f do
 			local v0=m.vs[f[i]]
 			local v1=m.vs[f[i+1]] or m.vs[f[1]]
-			line(get_sx(v0),get_sy(v0),get_sx(v1),get_sy(v1),m.col)
+			line(get_sx(v0,m_fresh),get_sy(v0,m_fresh),get_sx(v1,m_fresh),get_sy(v1,m_fresh),m.col)
 		end
 	end
+	m.fresh = true
 	for v in all(m.vs) do
 		draw_vec(v)
 	end
@@ -259,6 +262,7 @@ end
 function _init()
 	pov={0,0,0,phi=0}
 	models={}
+	frame=0
 	make_cube({-0.5,3,0.5},1,0.2,7)
 	make_cube({0,4,-0.5},0.5,0,11)
 	make_octa({-1,4,0},0.5,0,12)
@@ -266,6 +270,15 @@ function _init()
 end
 
 function _update()
+	frame+=eps
+
+	-- move shapes
+	for v in all(models[1].vs) do
+		v[1]+=0.02*sgn(cos(frame*0x1000))
+		models[1].fresh=false
+	end
+
+	-- control pov
 	fresh=true
 	if btn(⬆️) then
 		if btn(❎) then
