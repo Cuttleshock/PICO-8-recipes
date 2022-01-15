@@ -237,15 +237,32 @@ function make_octa(disp,scale,phi,col)
 	add(models,init_model(octa_fs,octa_vs,disp,scale,phi,col))
 end
 
+tetra_vs = {
+	{0,0,0},
+	{2,0,0},
+	{1,sqrt(3),0},
+	{1,invsqrt(3),2*sqrt(2)*invsqrt(3)},
+}
+tetra_fs = {
+	{1,2,3},
+	{1,2,4},
+	{1,3,4},
+	{2,3,4},
+}
+function make_tetra(disp,scale,phi,col)
+	add(models,init_model(tetra_fs,tetra_vs,disp,scale,phi,col))
+end
+
 -->8
 -- top-level logic
 
 function _init()
 	pov={0,0,0,phi=0}
 	models={}
-	make_cube({-0.5,1,0.5},1,0.2,7)
-	make_cube({0,2,-0.5},0.5,0,11)
-	make_octa({-1,2,0},0.5,0,12)
+	make_cube({-0.5,3,0.5},1,0.2,7)
+	make_cube({0,4,-0.5},0.5,0,11)
+	make_octa({-1,4,0},0.5,0,12)
+	make_tetra({-1,2,-1},0.3,0,10)
 end
 
 function _update()
