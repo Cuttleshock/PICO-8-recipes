@@ -152,14 +152,14 @@ end
 function get_sx(v, fresh)
 	-- todo check self.y==0 etc
 	-- todo check if behind cam
-	if not v._sx or not fresh then
+	if not fresh then
 		v._sx=(get_phi(v)-phimin)*(128/phiw)
 	end
 	return v._sx
 end
 
 function get_sy(v, fresh)
-	if not v._sy or not fresh then
+	if not fresh then
 		v._sy=(thetamax-get_theta(v))*128/thetah
 	end
 	return v._sy
