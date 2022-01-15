@@ -137,7 +137,6 @@ function tl_vec(v1,v2)
 end
 
 function get_phi(v)
-	-- we should serialise cos,sin(pov.phi)
 	local x=(v[1]-pov[1])*cos(pov.phi)-(v[2]-pov[2])*sin(pov.phi)
 	local y=(v[2]-pov[2])*cos(pov.phi)+(v[1]-pov[1])*sin(pov.phi)
 	return atan(x/y)
