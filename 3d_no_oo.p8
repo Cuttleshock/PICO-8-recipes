@@ -280,7 +280,11 @@ function _update()
 
 	-- move shapes
 	models[1].disp[1]+=0.02*sgn(cos(frame*0x1000))
+	models[1].phi+=0.05
 	models[1].fresh=false
+
+	models[3].phi-=0.03
+	models[3].fresh=false
 
 	-- control pov
 	fresh=true
