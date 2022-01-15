@@ -270,9 +270,9 @@ function _init()
 	models={}
 	frame=0
 	make_cube({-0.5,3,0.5},1,0.2,7)
-	make_cube({0,4,-0.5},0.5,0,11)
-	make_octa({-1,4,0},0.5,0,12)
-	make_tetra({-1,2,-1},0.3,0,10)
+	make_cube({0,4,-0.5},0.8,0,11)
+	make_octa({-1,4,0},0.8,0,12)
+	make_tetra({-0.5,2.5,-0.5},0.4,0,10)
 end
 
 function _update()
