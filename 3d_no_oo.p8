@@ -16,6 +16,7 @@ turnspd = 0.1
 
 pi = 3.1415
 pi2 = pi/2
+twopi = 2*pi
 inv2pi = 1/(pi*2)
 
 _sin_builtin=sin
@@ -139,7 +140,11 @@ end
 function get_phi(v)
 	local x=(v[1]-pov[1])*cos(pov.phi)-(v[2]-pov[2])*sin(pov.phi)
 	local y=(v[2]-pov[2])*cos(pov.phi)+(v[1]-pov[1])*sin(pov.phi)
-	return atan(x/y)
+	if y>0 then
+		return atan(x/y)
+	else
+		return (twopi+atan(x/y))*sgn(x)
+	end
 end
 
 function get_theta(v)
