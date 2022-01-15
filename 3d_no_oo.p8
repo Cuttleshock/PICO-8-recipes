@@ -125,6 +125,17 @@ end
 -->8
 -- vector definition
 
+function calc_vec(v, m, fresh)
+	if not fresh then
+		v[m] = {
+			((v[1]*cos(m.phi)+v[2]*sin(m.phi))+m.disp[1])*m.scale,
+			((v[2]*cos(m.phi)-v[1]*sin(m.phi))+m.disp[2])*m.scale,
+			(v[3]+m.disp[3])*m.scale,
+		}
+	end
+	return v[m]
+end
+
 function draw_vec(vec)
 	local x,y=get_sx(vec,true),get_sy(vec,true)
 	rectfill(x-1,y-1,x+1,y+1,8) -- red
@@ -173,29 +184,21 @@ end
 -- model definition
 
 function init_model(fs,vs,disp,scale,phi,col)
-	local m={fs=fs,vs={},col=col}
-	for v in all(vs) do
-		add(m.vs,{
-			((v[1]*cos(phi)+v[2]*sin(phi))+disp[1])*scale,
-			((v[2]*cos(phi)-v[1]*sin(phi))+disp[2])*scale,
-			(v[3]+disp[3])*scale,
-		})
-	end
-	add(models,m)
+	add(models,{fs=fs,vs=vs,disp=disp,scale=scale,phi=phi,col=col})
 end
 
 function draw_model(m)
 	local m_fresh = fresh and m.fresh
 	for f in all(m.fs) do
 		for i=1,#f do
-			local v0=m.vs[f[i]]
-			local v1=m.vs[f[i+1]] or m.vs[f[1]]
+			local v0=calc_vec(m.vs[f[i]],m,m_fresh)
+			local v1=calc_vec(m.vs[f[i+1]] or m.vs[f[1]],m,m_fresh)
 			line(get_sx(v0,m_fresh),get_sy(v0,m_fresh),get_sx(v1,m_fresh),get_sy(v1,m_fresh),m.col)
 		end
 	end
 	m.fresh = true
 	for v in all(m.vs) do
-		draw_vec(v)
+		draw_vec(calc_vec(v,m,true))
 	end
 end
 
@@ -276,10 +279,8 @@ function _update()
 	frame+=eps
 
 	-- move shapes
-	for v in all(models[1].vs) do
-		v[1]+=0.02*sgn(cos(frame*0x1000))
-		models[1].fresh=false
-	end
+	models[1].disp[1]+=0.02*sgn(cos(frame*0x1000))
+	models[1].fresh=false
 
 	-- control pov
 	fresh=true
