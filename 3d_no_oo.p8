@@ -156,7 +156,6 @@ end
 
 function get_sx(v, fresh)
 	-- todo check self.y==0 etc
-	-- todo check if behind cam
 	if not fresh then
 		v._sx=(get_phi(v)-phimin)*(128/phiw)
 	end
@@ -182,7 +181,7 @@ function init_model(fs,vs,disp,scale,phi,col)
 			(v[3]+disp[3])*scale,
 		})
 	end
-	return m
+	add(models,m)
 end
 
 function draw_model(m)
@@ -219,7 +218,7 @@ cube_fs = {
 	{5,6,7,8},
 }
 function make_cube(disp,scale,phi,col)
-	add(models,init_model(cube_fs,cube_vs,disp,scale,phi,col))
+	init_model(cube_fs,cube_vs,disp,scale,phi,col)
 end
 
 octa_vs = {
@@ -241,7 +240,7 @@ octa_fs = {
 	{6,5,2},
 }
 function make_octa(disp,scale,phi,col)
-	add(models,init_model(octa_fs,octa_vs,disp,scale,phi,col))
+	init_model(octa_fs,octa_vs,disp,scale,phi,col)
 end
 
 tetra_vs = {
@@ -257,7 +256,7 @@ tetra_fs = {
 	{2,3,4},
 }
 function make_tetra(disp,scale,phi,col)
-	add(models,init_model(tetra_fs,tetra_vs,disp,scale,phi,col))
+	init_model(tetra_fs,tetra_vs,disp,scale,phi,col)
 end
 
 -->8
