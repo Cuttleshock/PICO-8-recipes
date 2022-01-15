@@ -128,9 +128,9 @@ end
 function calc_vec(v, m, fresh)
 	if not fresh then
 		v[m] = {
-			((v[1]*cos(m.phi)+v[2]*sin(m.phi))+m.disp[1])*m.scale,
-			((v[2]*cos(m.phi)-v[1]*sin(m.phi))+m.disp[2])*m.scale,
-			(v[3]+m.disp[3])*m.scale,
+			(v[1]*cos(m.phi)+v[2]*sin(m.phi))*m.scale+m.disp[1],
+			(v[2]*cos(m.phi)-v[1]*sin(m.phi))*m.scale+m.disp[2],
+			(v[3]*m.scale)+m.disp[3],
 		}
 	end
 	return v[m]
@@ -285,6 +285,9 @@ function _update()
 
 	models[3].phi-=0.03
 	models[3].fresh=false
+
+	models[4].scale=0.3+0.15*sin(frame*0x1000)
+	models[4].fresh=false
 
 	-- control pov
 	fresh=true
